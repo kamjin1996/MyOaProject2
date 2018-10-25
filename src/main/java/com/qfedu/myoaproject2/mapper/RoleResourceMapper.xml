@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.myoaproject2.mapper.RoleResourceMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.myoaproject2.pojo.RoleResource">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="resid" jdbcType="INTEGER" property="resid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, rid, resid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_roleresource
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_roleresource
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.myoaproject2.pojo.RoleResource">
+    insert into t_roleresource (id, rid, resid
+      )
+    values (#{id,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, #{resid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qfedu.myoaproject2.pojo.RoleResource">
+    insert into t_roleresource
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="rid != null">
+        rid,
+      </if>
+      <if test="resid != null">
+        resid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null">
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="resid != null">
+        #{resid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.myoaproject2.pojo.RoleResource">
+    update t_roleresource
+    <set>
+      <if test="rid != null">
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="resid != null">
+        resid = #{resid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.myoaproject2.pojo.RoleResource">
+    update t_roleresource
+    set rid = #{rid,jdbcType=INTEGER},
+      resid = #{resid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

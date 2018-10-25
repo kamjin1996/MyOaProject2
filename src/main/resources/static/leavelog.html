@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>流程日志</title>
+    <link rel="stylesheet" href="media/layui/css/layui.css">
+    <script type="application/javascript" src="media/js/jQuery-3.3.1.js"></script>
+    <script type="application/javascript" src="media/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>流程日志</legend>
+    </fieldset>
+    <table id="userdata" lay-filter="tableop"></table>
+</div>
+
+<script type="application/javascript">
+    layui.use('table', function() {
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#userdata'
+            , height: 'full-40'
+            , url: 'leaveloglist.do' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
+                , {field: 'lid', title: '操作人ID'}
+                , {field: 'uid', title: '请假人ID'}
+                , {field: 'createtime', title: '创建时间'}
+                , {field: 'msg', title: '说明'}
+                , {field: 'type', title: '状态', templet: function(d){
+                        var r="";
+                        var color="";
+                        switch (d.type){
+                            case 0: r="未审批";color="layui-bg-red";break;
+                            case 1: r="已审批";color="layui-bg-green";break;
+                            case 2: r="未通过";color="layui-bg-blue";break;
+                            case 3: r="已删除";color="layui-bg-gray";break;
+                        }
+                        return "<label class='"+color+"'>"+r+"</label>";
+                    }
+                }
+                // , {fixed: 'right', title: '操作',toolbar:"#tarop"}
+            ]]
+        });
+
+    });
+
+</script>
+</body>
+</html>

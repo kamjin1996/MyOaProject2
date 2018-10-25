@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.myoaproject2.mapper.ResourceMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.myoaproject2.pojo.Resource">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="per" jdbcType="VARCHAR" property="per" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, type, per, icon, parentid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_resource
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectAll" resultType="com.qfedu.myoaproject2.pojo.Resource">
+      select * from t_resource;
+    </select>
+
+
+    <select id="selectByPage" resultType="com.qfedu.myoaproject2.pojo.Resource">
+      select * from t_resource limit #{index},#{limit}
+    </select>
+    <select id="selectCount" resultType="integer">
+      select count(*) from t_resource;
+    </select>
+
+
+    <select id="selectAllFirstMenu" resultType="com.qfedu.myoaproject2.pojo.Resource">
+      select * from t_resource where parentid=-1 and type=1;
+    </select>
+
+  <select id="selectByUid" resultType="com.qfedu.myoaproject2.pojo.Resource">
+    SELECT r.per FROM t_resource r
+    INNER JOIN t_roleresource rr ON r.id=rr.resid
+    INNER JOIN t_userrole ur ON rr.rid = ur.rid
+    WHERE ur.uid=#{uid} and r.per &lt;&gt;''
+  </select>
+
+  <select id="selectResourceByRidAtRR" resultType="com.qfedu.myoaproject2.pojo.Resource">
+    SELECT re.* FROM t_resource re
+    LEFT JOIN t_roleresource rr ON re.id=rr.resid
+    LEFT JOIN t_role ro ON rr.rid=ro.id
+    WHERE rr.rid = #{rid}
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_resource
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <delete id="deleteResoucrceByRid">
+    delete from t_roleresource where rid=#{rid}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.qfedu.myoaproject2.pojo.Resource">
+    insert into t_resource ( name, type,
+      per, icon, parentid
+      )
+    values (#{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{per,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}
+      )
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.qfedu.myoaproject2.pojo.Resource">
+    insert into t_resource
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="per != null">
+        per,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="parentid != null">
+        parentid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="per != null">
+        #{per,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <insert id="insertResourceByResid">
+    insert into t_roleresource value
+    <foreach collection="resid" item="res" separator="," >
+      (null,#{rid},#{res})
+    </foreach>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.myoaproject2.pojo.Resource">
+    update t_resource
+    <set>
+      <if test="name != null and name !=''">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null and type!=''">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="per != null and per!=''">
+        per = #{per,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null and icon!=''">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null and parentid!=''">
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.myoaproject2.pojo.Resource">
+    update t_resource
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      per = #{per,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      parentid = #{parentid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.myoaproject2.mapper.LeaveLogMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.myoaproject2.pojo.LeaveLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="lid" jdbcType="INTEGER" property="lid" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, uid, lid, type, createtime, msg
+  </sql>
+
+
+  <insert id="insert" parameterType="com.qfedu.myoaproject2.pojo.LeaveLog">
+    insert into t_leavelog ( uid, lid,
+      `type`, createtime, msg
+      )
+    values (#{uid,jdbcType=INTEGER}, #{lid,jdbcType=INTEGER},
+      #{type,jdbcType=INTEGER}, now(), #{msg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <select id="selectByPage" resultType="com.qfedu.myoaproject2.pojo.LeaveLog">
+    select
+    <include refid="Base_Column_List" />
+    from t_leavelog limit #{index},#{count}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+
+    select count(*) from t_leavelog
+  </select>
+</mapper>

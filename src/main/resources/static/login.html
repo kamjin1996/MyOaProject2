@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyOa-登录界面</title>
+    <link href="media/layui/css/layui.css" rel="stylesheet">
+    <script type="application/javascript" src="media/js/jQuery-3.3.1.js"></script>
+    <script type="application/javascript" src="media/layui/layui.js"></script>
+    <script type="application/javascript" src="media/js/app.js"></script>
+    <script type="text/javascript">
+        layui.use('form',function () {
+            var form = layui.form;
+            //监听提交
+            form.on('submit(demo1)',function (data) {
+                username = data.username;
+                return true;
+
+            });
+        });
+    </script>
+</head>
+<body>
+<div style="background-image: url(media/img/999.jpg);filter:alpha(opacity=40);opacity:0.7;width: 430px;height: 230px;border: #009E94 2px solid;margin: 0 auto;padding-top: 50px;position: absolute;left: 430px;top: 200px" >
+
+<div style="width: 400px;height: 100px;" >
+<form class="layui-form" action="/login.do" method="post" style="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号：</label>
+        <div class="layui-input-block">
+            <input type="text" id="username" name="username" required lay-verify="required"  placeholder="请输入用户名" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码：</label>
+        <div class="layui-input-block">
+            <input type="text" name="password" required lay-verify="required" placeholder="请输入密码" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">登录</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button type="button" href="javascript:void(0);" class="layui-btn layui-btn-primary"><a href="register.html">注册</a></button>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+
+</body>
+</html>

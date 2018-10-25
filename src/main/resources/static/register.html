@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyOa-账号注册</title>
+    <link href="media/layui/css/layui.css" rel="stylesheet">
+    <script type="application/javascript" src="media/js/jQuery-3.3.1.js"></script>
+    <script type="application/javascript" src="media/layui/layui.js"></script>
+    <script type="text/javascript" >
+        $(function () {
+
+            $("#reg").click(function () {
+                $.ajax({
+                    type:"post",
+                    url:"/register.do",
+                    async:true,
+                    data:{"username":$("[name='username']").val(),"password":$("[name='password']").val()},
+                    success:function (data) {
+                        if(data!=null){
+                            window.location.href="success.html";
+                        }
+                    }
+                })
+            })
+
+        })
+
+    </script>
+</head>
+<body>
+<div style="position: absolute;width: 400px;height: 200px;margin-left: 400px;margin-top: 200px">
+<div style="width: 400px;height: 100px;" >
+    <form class="layui-form" action="/register.do" style="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="required"  placeholder="请输入用户名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" lay-verify="required" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" id="reg" class="layui-btn layui-btn-primary">注册</button>
+            </div>
+        </div>
+
+    </form>
+    <a class="layui-btn" lay-filter="demo1" href="login.html">去登录</a>
+</div>
+</div>
+</body>
+</html>

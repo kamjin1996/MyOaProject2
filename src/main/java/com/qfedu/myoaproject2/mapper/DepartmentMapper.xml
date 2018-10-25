@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.myoaproject2.mapper.DepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.myoaproject2.pojo.Department">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="info" jdbcType="VARCHAR" property="info" />
+    <result column="flag" jdbcType="INTEGER" property="flag" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="count" property="count"></result>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, info, flag, createtime, level
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_department
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from t_department
+  </select>
+
+
+  <select id="selectByPage" resultType="com.qfedu.myoaproject2.pojo.Department">
+    SELECT d.*,COUNT(ud.did) `count` FROM t_department d LEFT JOIN t_userdepartment ud ON d.id=ud.did GROUP BY ud.did
+    LIMIT #{index},#{limit}
+  </select>
+
+
+  <select id="selectAll" resultType="com.qfedu.myoaproject2.pojo.Department">
+    select * from t_department
+  </select>
+
+  <select id="selectByUid" resultType="com.qfedu.myoaproject2.pojo.Department">
+    select d.* from t_department d
+    left join t_userdepartment ud on d.id=ud.did
+    where ud.uid=#{uid}
+  </select>
+
+
+  <select id="selectByName" resultType="com.qfedu.myoaproject2.pojo.Department">
+    select * from t_department where name=#{name}
+  </select>
+
+  <select id="selectIDByName" resultType="java.lang.Integer">
+    select id from t_department where name=#{name}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_department
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <delete id="deleteByUid">
+    delete from t_userdepartment where uid=#{uid}
+  </delete>
+
+  <insert id="insertUserDepartment">
+    insert into t_userdepartment values
+    <foreach collection="did" item="d" separator=",">
+      (null,#{uid},#{d},now())
+    </foreach>
+  </insert>
+
+
+  <insert id="insert" parameterType="com.qfedu.myoaproject2.pojo.Department" useGeneratedKeys="true" keyProperty="id">
+    insert into t_department (name, info,
+      flag, createtime, level
+      )
+    values ( #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR},
+      #{flag,jdbcType=INTEGER}, now(), #{level,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertUsersByDid">
+    insert into t_userdepartment values
+    <foreach collection="uids" item="uid" separator=",">
+      (null,#{uid},#{did},now())
+    </foreach>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.myoaproject2.pojo.Department">
+    update t_department
+    <set>
+      <if test="name != null and name!=''">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null and info!=''">
+        info = #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null and flag!=''">
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null and createtime!=''">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null and level!=''">
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.myoaproject2.pojo.Department">
+    update t_department
+    set name = #{name,jdbcType=VARCHAR},
+      info = #{info,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      level = #{level,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

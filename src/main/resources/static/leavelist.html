@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LoveJob_流程列表</title>
+    <link rel="stylesheet" href="media/layui/css/layui.css">
+    <script type="application/javascript" src="media/js/jQuery-3.3.1.js"></script>
+    <script type="application/javascript" src="media/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>流程列表</legend>
+    </fieldset>
+    <table id="userdata" lay-filter="tableop"></table>
+    <script type="text/html" id="tarop">
+        <a class="layui-btn layui-btn-xs" lay-event="ok">确认</a>
+        <a class="layui-btn layui-btn-xs" lay-event="error">取消</a>
+        <a class="layui-btn layui-btn-xs" lay-event="del">取消</a>
+
+    </script>
+
+</div>
+
+<script type="application/javascript">
+    layui.use('table', function() {
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#userdata'
+            , height: 'full-40'
+            , url: 'leaveall.do' //数据接口
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
+                , {field: 'uname', title: '请假人'}
+                , {field: 'createtime', title: '申请时间',sort: true}
+                , {field: 'startdate', title: '开始时间'}
+                , {field: 'days', title: '天数', sort: true}
+                , {field: 'reason', title: '原因'}
+                , {field: 'taskid', title: '任务ID'}
+                , {field: 'flag', title: '状态', templet: function(d){
+                        var r="";
+                        var color="";
+                        switch (d.flag){
+                            case 0: r="未批";color="layui-bg-red";break;
+                            case 1: r="已批";color="layui-bg-green";break;
+                            case 2: r="未通过";color="layui-bg-blue";break;
+                            case 3: r="已删除";color="layui-bg-gray";break;
+                        }
+                        return "<label class='"+color+"'>"+r+"</label>";
+                    }
+                }
+                , {fixed:'right', title: '操作',toolbar:"#tarop"}
+            ]]
+        });
+        //监听工具条
+        table.on('tool(tableop)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'ok'){
+                layer.confirm('确认审批此条记录吗?', function(index){
+                    //审批操作
+                    leaveok(data);
+                });
+            } else if(obj.event === 'del'){
+                layer.confirm('确认删除此条记录吗?', function(index){
+                    //修改flag为3==删除
+                    leavedel(data);
+                });
+            } else if(obj.event === 'error'){
+                layer.confirm('确认撤销此条记录吗?', function(index){
+                    //取消，未通过
+                    leaveundo(data);
+                });
+            }
+        });
+    });
+   function leaveok(data){
+       $.ajax({
+           type:"get",
+           url:"leaveupdate.do",
+           //0表示未审批（默认），1表示已审批，2表示未通过，3表示管理员删除
+           data:{"tid":data.taskid,"flag":1,"id":data.id},
+           async:true,
+           success:function (data) {
+               <!--修改完成后模拟点击分页按钮刷新数据-->
+               $(".layui-laypage-btn")[0].click()
+               if(data==0){
+                   layer.msg("已审批")
+               } else {
+                   layer.msg("服务器异常，请稍后重试")
+               }
+           }
+       })
+   }
+   function leaveundo(data) {
+       $.ajax({
+           type:"get",
+           url:"leaveupdate.do",
+           //0表示未审批（默认），1表示已审批，2表示未通过，3表示管理员删除
+           data:{"tid":data.taskid,"flag":2,"id":data.id},
+           async:true,
+           success:function (data) {
+               <!--修改完成后模拟点击分页按钮刷新数据-->
+               $(".layui-laypage-btn")[0].click()
+               if(data==0){
+                   layer.msg("已撤销")
+               } else {
+                   layer.msg("服务器异常，请稍后重试")
+               }
+           }
+       })
+   }
+
+   function leavedel(data) {
+       $.ajax({
+           type:"get",
+           url:"leaveupdate.do",
+           //flag0表示未审批（默认），1表示已审批，2表示未通过，3表示管理员删除
+           data:{"tid":data.taskid,"flag":3,"id":data.id},
+           async:true,
+           success:function (data) {
+               if(data==0){
+                   layer.msg("已删除")
+                   obj.del();
+                   layer.close(index);
+               } else {
+                   layer.msg("服务器异常，请稍后重试")
+               }
+           }
+       })
+   }
+</script>
+</body>
+</html>

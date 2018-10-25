@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.myoaproject2.mapper.LeaveMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.myoaproject2.pojo.Leave">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="uname" property="uname"/>
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="days" jdbcType="INTEGER" property="days" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="startdate" jdbcType="DATE" property="startdate" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="flag" jdbcType="INTEGER" property="flag" />
+    <result column="taskid" jdbcType="VARCHAR" property="taskid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, uid, name, days, createtime, startdate, reason, flag, taskid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_leave
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectByPage" resultType="com.qfedu.myoaproject2.pojo.Leave">
+    select
+    <include refid="Base_Column_List" />
+    from t_leave limit #{index},#{count}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from t_leave
+  </select>
+
+
+  <select id="selectByUid" resultType="com.qfedu.myoaproject2.pojo.Leave">
+    select l.*,u.username uname from t_leave l left join t_user u on u.id=l.uid where uid=#{uid} and l.flag=0
+  </select>
+
+
+  <select id="selectAll" resultType="com.qfedu.myoaproject2.pojo.Leave">
+    select l.*,u.username uname from t_leave l left join t_user u on u.id=l.uid
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_leave
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.myoaproject2.pojo.Leave">
+    insert into t_leave ( uid, name,
+      days, createtime, startdate, 
+      reason, flag, taskid
+      )
+    values (#{uid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+      #{days,jdbcType=INTEGER}, now(), #{startdate,jdbcType=DATE},
+      #{reason,jdbcType=VARCHAR}, 0, #{taskid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qfedu.myoaproject2.pojo.Leave">
+    insert into t_leave
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="days != null">
+        days,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="startdate != null">
+        startdate,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="taskid != null">
+        taskid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null">
+        #{days,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startdate != null">
+        #{startdate,jdbcType=DATE},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null">
+        #{taskid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qfedu.myoaproject2.pojo.Leave">
+    update t_leave
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null">
+        days = #{days,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startdate != null">
+        startdate = #{startdate,jdbcType=DATE},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null">
+        taskid = #{taskid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.qfedu.myoaproject2.pojo.Leave">
+    update t_leave
+    set uid = #{uid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      days = #{days,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      startdate = #{startdate,jdbcType=DATE},
+      reason = #{reason,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      taskid = #{taskid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateFlag">
+    update t_leave set flag=#{flag} where id=#{id}
+  </update>
+
+
+</mapper>
