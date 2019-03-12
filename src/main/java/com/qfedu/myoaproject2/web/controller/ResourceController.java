@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,8 +37,8 @@ public class ResourceController extends BaseController {
 
     //保存
     @RequestMapping("/resourcesave.do")
-    public String save(Resource resource) {
-        return resourceService.save(resource) ? "resourcelist.html" : "resourceadd.html";
+    public Mono<String> save(Resource resource) {
+        return resourceService.save(resource) ? Mono.just("resourcelist.html") : Mono.just("resourceadd.html");
     }
 
     //加载一级菜单
@@ -104,7 +105,7 @@ public class ResourceController extends BaseController {
 
     //删除权限
     @RequestMapping("/deleteres.do")
-    public void deleteRes(int id,HttpServletResponse response) throws IOException {
+    public void deleteRes(int id, HttpServletResponse response) throws IOException {
         try {
             int i = resourceService.deleteResById(id);
             if (i > 0) {

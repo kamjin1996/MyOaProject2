@@ -25,7 +25,7 @@ public class WebConfig {
      * @return
      */
     @Bean
-    public org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver() {
+    public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setDefaultEncoding("UTF-8");
         multipartResolver.setMaxInMemorySize(100 * 1024 * 1024);
@@ -34,9 +34,8 @@ public class WebConfig {
     }
 
     @Bean
-    public ServletListenerRegistrationBean servletListenerRegistrationBean(){
-        ServletListenerRegistrationBean<EventListener> servletListenerRegistrationBean = new ServletListenerRegistrationBean<>(new MyActivitiInit());
-        return servletListenerRegistrationBean;
+    public ServletListenerRegistrationBean listenerRegistrationBean(){
+        return new ServletListenerRegistrationBean<>(new MyActivitiInit());
     }
 }
 

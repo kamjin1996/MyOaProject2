@@ -1,7 +1,6 @@
 package com.qfedu.myoaproject2.web.listener;
 
 
-
 import com.qfedu.myoaproject2.service.LeaveService;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -19,6 +18,7 @@ import javax.servlet.annotation.WebListener;
  */
 @WebListener
 public class MyActivitiInit implements ServletContextAware, ServletContextListener {
+
     @Override
     public void setServletContext(ServletContext servletContext) {
         LeaveService leaveService = WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(LeaveService.class);

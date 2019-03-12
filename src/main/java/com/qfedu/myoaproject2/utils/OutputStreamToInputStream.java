@@ -17,8 +17,7 @@ public class OutputStreamToInputStream {
         while ((rc = inStream.read(buff, 0, 100)) > 0) {
             swapStream.write(buff, 0, rc);
         }
-        byte[] in2b = swapStream.toByteArray();
-        return in2b;
+        return swapStream.toByteArray();
     }
 
     /**
@@ -34,15 +33,15 @@ public class OutputStreamToInputStream {
             file = new File(outputFile);
             os = new FileOutputStream(file);
             os.write(b);
-        } catch (Exception var13) {
-            var13.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (os != null) {
                     os.close();
                 }
-            } catch (IOException var12) {
-                var12.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return file;
@@ -51,9 +50,6 @@ public class OutputStreamToInputStream {
 
     // outputStream转inputStream
     public static ByteArrayInputStream parse(OutputStream out) throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = (ByteArrayOutputStream) out;
-        ByteArrayInputStream swapStream = new ByteArrayInputStream(baos.toByteArray());
-        return swapStream;
+        return new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
     }
 }

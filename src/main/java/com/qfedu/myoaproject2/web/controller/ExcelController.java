@@ -1,6 +1,5 @@
 package com.qfedu.myoaproject2.web.controller;
 
-
 import com.qfedu.myoaproject2.base.controller.BaseController;
 import com.qfedu.myoaproject2.mapper.ExcelMapper;
 import com.qfedu.myoaproject2.service.ExcelService;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,46 +27,36 @@ import java.util.List;
 
 @Controller
 public class ExcelController extends BaseController {
+
     @Autowired
     private ExcelService excelServie;
 
     @Autowired
-    ExcelMapper excelMapper;
+    private ExcelMapper excelMapper;
 
     //导入Excel
     @RequestMapping("/inexcel.do")
     public @ResponseBody
     QueryVo uploadExcel(@RequestParam("file") CommonsMultipartFile file) throws IOException {
-        QueryVo queryVo = new QueryVo();
-        int i = excelServie.inExcel(file);
-        if(i>0){
-            queryVo.setCode(0);
-        } else {
-            queryVo.setCode(1);
-        }
-        return queryVo;
+        return new QueryVo(this.excelServie.inExcel(file) > 0 ? 0 : 1);
     }
 
     //导出excel
     @RequestMapping("/outexcel.do")
     public void outExcel(HttpServletResponse response) throws Exception {
-        String[] rowName= {"ID","用户名","密码","flag"};
-        List<Object[]> datalist = new ArrayList<>();
-        List<ExcelVo> excelVos = excelMapper.selectExcel();
-        for (ExcelVo excelVo : excelVos) {
-            Object[] o = {excelVo.getId(),excelVo.getUsername(),excelVo.getPassword(),excelVo.getFlag()};
-            datalist.add(o);
-        }
+        String[] rowName = {"ID", "用户名", "密码", "flag"};
         String sheetName = "教育";
-        WriteExcel writeExcel = new WriteExcel(rowName,datalist,sheetName);
-        writeExcel.saveToFile("D:/info9.xls");
-        File file = new File("D:/info9.xls");
-        byte[] bytes = FileUtils.readFileToByteArray(file);
-        String filename="default.xls";
-        filename= URLEncoder.encode(filename,"utf-8");
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition","attachment; filename="+filename);
-        response.getOutputStream().write(bytes);
+        List<Object[]> dataList = Arrays.asList();
+        List<ExcelVo> excelVos = this.excelMapper.selectExcel();
+        excelVos.forEach(excelVo -> {
+            Object[] data = {excelVo.getId(), excelVo.getUsername(), excelVo.getPassword(), excelVo.getFlag()};
+            dataList.add(data);
+        });
 
+        new WriteExcel(rowName, dataList, sheetName).saveToFile("D:/info9.xls");
+        String filename = URLEncoder.encode("default.xls", "utf-8");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.getOutputStream().write(FileUtils.readFileToByteArray(new File("D:/info9.xls")));
     }
 }

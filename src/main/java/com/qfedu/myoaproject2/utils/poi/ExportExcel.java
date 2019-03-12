@@ -40,7 +40,7 @@ public class ExportExcel {
      */
     public static void exportExcel(String sheetName, String titleName, String[] headers, Collection<?> dataSet, String resultUrl, HttpServletResponse response, String pattern) throws Exception {
 
-        doExportExcel(sheetName,titleName,headers,dataSet,resultUrl,response,pattern);
+        doExportExcel(sheetName, titleName, headers, dataSet, resultUrl, response, pattern);
 
     }
 
@@ -57,7 +57,7 @@ public class ExportExcel {
         // 设置工作表默认列宽度为20个字节
         sheet.setDefaultColumnWidth((short) 20);
         //在工作表中合并首行并居中
-        sheet.addMergedRegion(new CellRangeAddress(0,0,0,headers.length-1));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headers.length - 1));
 
         // 创建[标题]样式
         HSSFCellStyle titleStyle = workbook.createCellStyle();
@@ -147,26 +147,23 @@ public class ExportExcel {
                 @SuppressWarnings("deprecation")
                 HSSFCell cell = row.createCell(i);
                 cell.setCellStyle(dataSetStyle);
-                Field field = fields[i];
-                String fieldName = field.getName();
-                String getMethodName = "get"+ fieldName.substring(0, 1).toUpperCase()+ fieldName.substring(1);
+                String fieldName = fields[i].getName();
+                String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
                 try {
                     @SuppressWarnings("rawtypes")
                     Class tCls = t.getClass();
                     @SuppressWarnings("unchecked")
-                    Method getMethod = tCls.getMethod(getMethodName,new Class[] {});
-                    Object value = getMethod.invoke(t, new Object[] {});
+                    Method getMethod = tCls.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(t, new Object[]{});
                     //空处理
-                    if(value==null){
+                    if (value == null) {
                         value = "";
                     }
 
                     // 如果是时间类型,按照格式转换
                     String textValue = null;
                     if (value instanceof Date) {
-                        Date date = (Date) value;
-                        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                        textValue = sdf.format(date);
+                        textValue = new SimpleDateFormat(pattern).format((Date) value);
                     } else {
                         // 其它数据类型都当作字符串简单处理
                         textValue = value.toString();
@@ -185,16 +182,16 @@ public class ExportExcel {
                         }
                     }
                     //输出
-                    OutputStream out=null;
+                    OutputStream out = null;
                     try {
-                        if(resultUrl==null||"".equals(resultUrl)){
+                        if (resultUrl == null || "".equals(resultUrl)) {
                             throw new Exception("至少定义一个输出位置!");
                         }
-                            out = new FileOutputStream(resultUrl);
-                            workbook.write(out);
+                        out = new FileOutputStream(resultUrl);
+                        workbook.write(out);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }finally{
+                    } finally {
                         try {
                             out.close();
                         } catch (IOException e) {

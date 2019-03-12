@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,11 +24,11 @@ public class LeaveController extends BaseController {
 
     //创建
     @RequestMapping("/leaveadd.do")
-    public String add(Leave leave, String rname) {
+    public Mono<String> add(Leave leave, String rname) {
         User user = (User) SecurityUtils.getSubject().getSession().getAttribute("user");
         leave.setUid(user.getId());
         leaveService.createPro(leave, user.getUsername(), rname);
-        return "leavelist.html";
+        return Mono.just("leavelist.html");
     }
 
     //审批

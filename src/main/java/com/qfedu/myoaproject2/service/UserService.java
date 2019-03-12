@@ -5,16 +5,19 @@ import com.qfedu.myoaproject2.mapper.UserMapper;
 import com.qfedu.myoaproject2.pojo.User;
 import com.qfedu.myoaproject2.vo.QueryVo;
 
+import java.util.List;
+
 public interface UserService<U> extends BaseService<UserMapper,User> {
 
     User queryByName(String username, String password);
+
     boolean register(User user);
 
     QueryVo<User> queryAllByPage(int page, int limit);
 
     boolean add(User user);
 
-    boolean checkName(String username);
+    User checkName(String username);
 
     boolean editUserByID(User user);
 

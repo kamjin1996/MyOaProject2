@@ -19,16 +19,12 @@ import java.util.List;
 /**
  * UserRealm
  */
-
+@Data
 public class UserRealm extends AuthorizingRealm {
 
     private ResourceService resourceService;
 
-    public ResourceService getResourceService() {
-        return resourceService;
-    }
-
-    public void setResourceService(ResourceService resourceService) {
+    public UserRealm(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 
@@ -42,8 +38,8 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();//当前用户拥有的权限统统存在集合info内，前端传来的权限请求会进行匹配，有与否用0|1表示
         User user = (User) SecurityUtils.getSubject().getSession().getAttribute("user");//查询当前用户的所有拥有权限
-        List<Resource> resources = resourceService.selectByUid(user.getId());
-        for(Resource re : resources){ //遍历权限集合，存入info中
+        List<Resource> resourceList = resourceService.selectByUid(user.getId());
+        for (Resource re : resourceList) { //遍历权限集合，存入info中
             info.addStringPermission(re.getPer());
         }
         return info;

@@ -10,6 +10,7 @@ import javax.validation.constraints.DecimalMax;
 import java.util.List;
 
 public interface DepartmentService extends BaseService<DepartmentMapper,Department> {
+
     boolean save(Department department);
 
     QueryVo<Department> queryAllByPage(int page, int limit);
@@ -20,6 +21,6 @@ public interface DepartmentService extends BaseService<DepartmentMapper,Departme
 
     List<Department> queryByUid(int uid);
 
-    int updateUserDepartmentByUid(Integer[] did, int uid);
+    int updateByUid(Integer[] did, int uid);
 
 }

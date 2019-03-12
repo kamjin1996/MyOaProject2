@@ -28,10 +28,10 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        advisorAutoProxyCreator.setProxyTargetClass(true);
-        return advisorAutoProxyCreator;
+    public DefaultAdvisorAutoProxyCreator proxyCreator(){
+        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
+        proxyCreator.setProxyTargetClass(true);
+        return proxyCreator;
     }
 
     /**
@@ -40,7 +40,7 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor attributeSourceAdvisor(){
+    public AuthorizationAttributeSourceAdvisor sourceAdvisor(){
         return new AuthorizationAttributeSourceAdvisor();
     }
 
@@ -51,17 +51,13 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public org.apache.shiro.web.mgt.DefaultWebSecurityManager securityManager(UserRealm userRealm){
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(userRealm);
-        return securityManager;
+    public DefaultWebSecurityManager securityManager(UserRealm userRealm){
+        return new DefaultWebSecurityManager(userRealm);
     }
 
     @Bean
     public UserRealm userRealm(ResourceService resourceService){
-        UserRealm userRealm = new UserRealm();
-        userRealm.setResourceService(resourceService);
-        return userRealm;
+        return  new UserRealm(resourceService);
     }
 
     /**
@@ -71,18 +67,18 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public org.apache.shiro.spring.web.ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager){
+    public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
         shiroFilter.setLoginUrl("/login.html");
         shiroFilter.setSuccessUrl("/index.html");
         shiroFilter.setUnauthorizedUrl("/unauthor.html");
-        Map<String,String> filterChainDefinitions = new HashMap();
-        filterChainDefinitions.put("/media/**","anon");
-        filterChainDefinitions.put("/login.html","anon");
-        filterChainDefinitions.put("/login.do","anon");
-        filterChainDefinitions.put("/**","authc");
-        shiroFilter.setFilterChainDefinitionMap(filterChainDefinitions);
+        Map<String,String> map = new HashMap();
+        map.put("/media/**","anon");
+        map.put("/login.html","anon");
+        map.put("/login.do","anon");
+        map.put("/**","authc");
+        shiroFilter.setFilterChainDefinitionMap(map);
         return shiroFilter;
     }
 

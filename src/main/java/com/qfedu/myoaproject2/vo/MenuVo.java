@@ -2,19 +2,26 @@ package com.qfedu.myoaproject2.vo;
 
 import com.qfedu.myoaproject2.pojo.Resource;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 准备左侧菜单资源，MenuVo类表示一级菜单和多个子菜单
- *
  */
 @Data
+@Accessors(chain = true)
 public class MenuVo {
 
     private Resource parent;
     private List<Resource> childrens;
+
+    private MenuVo(Resource parent) {
+        this.parent = parent;
+    }
+
+    MenuVo() {
+    }
 
     /**
      * 遍历resources，当parentid是-1，将此resouce赋值给parent，
@@ -26,24 +33,21 @@ public class MenuVo {
      * @return 返回list泛型Menuvo
      */
     public static List<MenuVo> createMenuList(List<Resource> resources) {
-        List<MenuVo> menuVos = new ArrayList<>();//准备一个list集合，保存menuvo
-        for(int i = 0;i<resources.size();i++){//添加所有parentid是-1的到menuvo集合中，同时添加parentid等于当前resouc的id的对象到child中
-            if(resources.get(i).getParentid()==-1&&resources.get(i).getType()!=2){
-                int parentid = resources.get(i).getId();
-                MenuVo menuVo = new MenuVo();
-                menuVo.setParent(resources.get(i));
-                List<Resource> rechild = new ArrayList<>();
-                for(int j = 0;j<resources.size();j++){
-                    if(parentid==resources.get(j).getParentid()){
-                        rechild.add(resources.get(j));
-                    }
-                    menuVo.setChildrens(rechild);
-                }
-                menuVos.add(menuVo);
-            }
-
-        }
+        List<MenuVo> menuVos = Collections.emptyList();
+        resources.stream()
+                .filter(resource -> resource.getParentid() == -1 && resource.getType() != 2)
+                .forEach(resource -> {
+                    MenuVo menuVo = new MenuVo(resource);
+                    List<Resource> childList = Collections.emptyList();
+                    Integer parentId = resource.getId();
+                    resources.forEach(resource1 -> {
+                        if (Objects.equals(parentId, resource1.getParentid())) {
+                            childList.add(resource1);
+                        }
+                        menuVo.setChildrens(childList);
+                    });
+                    menuVos.add(menuVo);
+                });
         return menuVos;
     }
-
 }

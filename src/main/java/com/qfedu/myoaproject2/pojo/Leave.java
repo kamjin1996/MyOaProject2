@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @TableName("t_leave")
 public class Leave {
+
     @TableField("id")
     private Integer id;
 

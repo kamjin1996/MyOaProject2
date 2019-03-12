@@ -101,8 +101,7 @@ public class WriteExcel {
         }
 
         byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        return is;
+        return new ByteArrayInputStream(content);
     }
 
 

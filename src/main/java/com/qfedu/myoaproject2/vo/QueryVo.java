@@ -1,6 +1,7 @@
 package com.qfedu.myoaproject2.vo;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -10,27 +11,38 @@ import java.util.List;
  * @param <T> 子菜单下list的泛型 如resource user role等
  */
 @Data
-public class QueryVo <T> {
+@Accessors(chain = true)
+public class QueryVo<T> {
     private int code;
     private int count;
     private String msg;
     private List<T> data;
 
+    public QueryVo() {
+
+    }
+
+    public QueryVo(int code) {
+        this.code = code;
+    }
+
+    private QueryVo(int code, int count, String msg, List<T> data) {
+        this.code = code;
+        this.count = count;
+        this.msg = msg;
+        this.data = data;
+    }
+
     /**
      * 组成一个页面
      *
      * @param count 页面中所有的条目数
-     * @param data 具体页面list数据
-     * @param <T> list数据类型
+     * @param data  具体页面list数据
+     * @param <T>   list数据类型
      * @return 此page对象将在controller作为json格式返回 对应着LayUI展示list类型页面的数据接口
      */
-    public static <T> QueryVo<T> createPage(int count, List<T> data){
-        QueryVo<T> page = new QueryVo<T>();
-        page.setCode(0);
-        page.setCount(count);
-        page.setMsg("ok");
-        page.setData(data);
-        return page;
+    public static <T> QueryVo<T> createPage(int count, List<T> data) {
+        return new QueryVo<T>(0, count, "ok", data);
     }
 }
 

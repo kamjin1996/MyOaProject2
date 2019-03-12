@@ -20,30 +20,29 @@ public class ActivitiConfig {
     /**
      * 引擎的配置对象
      *
-     * @param druidDataSource
+     * @param dataSource
      * @return
      */
     @Bean
-    public org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration standaloneProcessEngineConfiguration(DruidDataSource druidDataSource){
-        StandaloneProcessEngineConfiguration processEngineConfiguration = new StandaloneProcessEngineConfiguration();
-        processEngineConfiguration.setDataSource(druidDataSource);
-        processEngineConfiguration.setDatabaseSchemaUpdate("true");
-        processEngineConfiguration.setLabelFontName("宋体");
-        processEngineConfiguration.setActivityFontName("宋体");
-        return processEngineConfiguration;
+    public StandaloneProcessEngineConfiguration engineConfiguration(DruidDataSource dataSource) {
+        StandaloneProcessEngineConfiguration engineConfiguration = new StandaloneProcessEngineConfiguration();
+        engineConfiguration.setDataSource(dataSource);
+        engineConfiguration.setDatabaseSchemaUpdate("true");
+        engineConfiguration.setLabelFontName("宋体");
+        engineConfiguration.setActivityFontName("宋体");
+        return engineConfiguration;
     }
 
     /**
      * 创建引擎对象
      *
-     * @param processEngineConfiguration
+     * @param engineConfiguration
      * @return
      */
     @Bean
-    public org.activiti.engine.ProcessEngine processEngine(StandaloneProcessEngineConfiguration processEngineConfiguration){
-        processEngineConfiguration.buildProcessEngine();
-        ProcessEngine processEngine = new ProcessEngineImpl(processEngineConfiguration);
-        return processEngine;
+    public ProcessEngine processEngine(StandaloneProcessEngineConfiguration engineConfiguration) {
+        engineConfiguration.buildProcessEngine();
+        return new ProcessEngineImpl(engineConfiguration);
     }
 
     /**
@@ -53,9 +52,8 @@ public class ActivitiConfig {
      * @return
      */
     @Bean
-    public org.activiti.engine.RepositoryService repositoryService(ProcessEngine processEngine){
-        RepositoryService repositoryService = processEngine.getRepositoryService();
-        return repositoryService;
+    public RepositoryService repositoryService(ProcessEngine processEngine) {
+        return processEngine.getRepositoryService();
     }
 
     /**
@@ -65,7 +63,7 @@ public class ActivitiConfig {
      * @return
      */
     @Bean
-    public org.activiti.engine.RuntimeService runtimeService(ProcessEngine processEngine){
+    public org.activiti.engine.RuntimeService runtimeService(ProcessEngine processEngine) {
         return processEngine.getRuntimeService();
     }
 
@@ -76,7 +74,7 @@ public class ActivitiConfig {
      * @return
      */
     @Bean
-    public org.activiti.engine.TaskService taskService(ProcessEngine processEngine){
+    public org.activiti.engine.TaskService taskService(ProcessEngine processEngine) {
         return processEngine.getTaskService();
     }
 
@@ -87,7 +85,7 @@ public class ActivitiConfig {
      * @return
      */
     @Bean
-    public org.activiti.engine.HistoryService historyService(ProcessEngine processEngine){
+    public org.activiti.engine.HistoryService historyService(ProcessEngine processEngine) {
         return processEngine.getHistoryService();
     }
 }
